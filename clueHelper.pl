@@ -1,4 +1,4 @@
-:- dynamic person/1, weapon/1, room/1, cdef/0, abcd/0.
+:- dynamic person/1, weapon/1, room/1, failed_guess/3.
 
 ourList([],5).
 
@@ -31,14 +31,20 @@ room(library).
 room(study). 
 
 
-people(L) :- person(P), member(P,L), arePeople(T). 
+%% people(L) is true if L is the list of all possible suspects
+people(L) :- findall(X0, person(X0), L). 
 
-arePeople([]).
-arePeople(H|T) :- person(H), arePeople(T). 
+%% weapons(L) is true if L is the list of all possible murder weapons
+weapons(L) :- findall(X0, weapon(X0), L). 
 
+%% rooms(L) is true if L is the list of all possible rooms
+rooms(L) :- findall(X0, room(X0), L).
 
-possible(P, W, R) :- person(P), weapon(W), room(R), \+ failedGuess(P, W, R). 
+possible(P, W, R) :- person(P), weapon(W), room(R), \+ failed_guess(P, W, R). 
 
+possible(a(P, W, R)) :- possible(P, W, R). 
+
+all_possibilities(L) :- findall(X0, possible(X0), L).
 
 %% possibilities(P, W, R, Chance) is true if the chance of P W and R being the answer
 %% is at least Chance
@@ -58,6 +64,5 @@ possible(P, W, R) :- person(P), weapon(W), room(R), \+ failedGuess(P, W, R).
 %% failed_guess(P, W, R) is true if person P, weapon W, and room R have been guessed 
 %% and proven wrong i.e. one or more of the 3 is not the correct answer
 
-failed_guess(colonel_mustard, knife, hall). 
-failed_guess(mrs_scarlet, wrench, hall). 
+
 
