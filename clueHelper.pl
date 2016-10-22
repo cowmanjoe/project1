@@ -30,7 +30,12 @@ room(billiard_room).
 room(library).
 room(study). 
 
-abcd :- assert(cdef).
+
+people(L) :- person(P), member(P,L), arePeople(T). 
+
+arePeople([]).
+arePeople(H|T) :- person(H), arePeople(T). 
+
 
 possible(P, W, R) :- person(P), weapon(W), room(R), \+ failedGuess(P, W, R). 
 
@@ -47,9 +52,12 @@ possible(P, W, R) :- person(P), weapon(W), room(R), \+ failedGuess(P, W, R).
 %% chance of being the correct answer
 
 
+%% total_possibilities(X) is true if X is the total number of possible combinations
+%% that the answer could be
 
 %% failed_guess(P, W, R) is true if person P, weapon W, and room R have been guessed 
-%% and proven wrong 
+%% and proven wrong i.e. one or more of the 3 is not the correct answer
 
 failed_guess(colonel_mustard, knife, hall). 
 failed_guess(mrs_scarlet, wrench, hall). 
+
