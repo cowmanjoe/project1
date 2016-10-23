@@ -1,53 +1,27 @@
 :- dynamic person/1, weapon/1, room/1, failed_guess/3, current_people/1, 
 	current_weapons/1, current_rooms/1.
 
-current_people([colonel_mustardk,mrs_peacock, mrs_scarlet, professor_plum, mr_green, mrs_white]).
+current_people([colonel_mustard, mrs_peacock, mrs_scarlet, professor_plum, mr_green, mrs_white]).
 current_weapons([knife, candlestick, revolver, rope, lead_pipe, wrench]). 
 current_rooms([hall, lounge, dining_room, kitchen, ballroom, conservatory, billiard_room, library, study]).
 
-%% possible suspects
-person(colonel_mustard).
-person(mrs_peacock).
-person(mrs_scarlet).
-person(professor_plum).
-person(mr_green).
-person(mrs_white).
-
-%% possible murder weapons used
-weapon(knife).
-weapon(candlestick).
-weapon(revolver).
-weapon(rope).
-weapon(lead_pipe).
-weapon(wrench). 
-
-%% possible rooms 
-room(hall).
-room(lounge).
-room(dining_room). 
-room(kitchen). 
-room(ballroom). 
-room(conservatory). 
-room(billiard_room).
-room(library).
-room(study). 
-
-
-%% people(L) is true if L is the list of all possible suspects
-people(L) :- findall(X0, person(X0), L). 
-
-%% weapons(L) is true if L is the list of all possible murder weapons
-weapons(L) :- findall(X0, weapon(X0), L). 
-
-%% rooms(L) is true if L is the list of all possible rooms
-rooms(L) :- findall(X0, room(X0), L).
-
 %% possible(P, W, R) is true if person P, weapon W and room R could make a 
 %% possible answer
-possible(P, W, R) :- person(P), weapon(W), room(R), \+ failed_guess(P, W, R). 
+possible(P, W, R) :- 
+	current_people(LP), 
+	current_weapons(LW),
+	current_rooms(LR), 
+	member(P, LP), 
+	member(W, LW), 
+	member(R, LR), 
+	\+ failed_guess(P, W, R). 
 
 %% does the same as possible but organized into a triple
 possible(a(P, W, R)) :- possible(P, W, R). 
+
+%% all_possibilities(P, W, R, L) is true if L is the list of all possible answers
+%% with the given person, weapon or room
+all_possibilities(P, W, R, L) :- findall(a(P, W, R), possible(a(P, W, R)), L).
 
 %% all_possibilities(L) is true when L is the list of all possible answers
 all_possibilities(L) :- findall(X0, possible(X0), L).
