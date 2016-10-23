@@ -1,6 +1,5 @@
 :- dynamic person/1, weapon/1, room/1, failed_guess/3.
 
-ourList([],5).
 
 
 %% possible suspects
@@ -54,6 +53,10 @@ all_possibilities(L) :- findall(X0, possible(X0), L).
 %% total_possibilities(X) is true if X is the total number of possible combinations
 %% that the answer could be
 total_possibilities(X) :- all_possibilities(L), length(L, X). 
+
+%% chance(X) is true if X is the percentage chance of any one of the answers left
+%% to be true
+chance(X) :- total_possibilities(Y), X is 100 / Y.
 
 %% possibilities(P, W, R, Chance) is true if the chance of P W and R being the answer
 %% is at least Chance
